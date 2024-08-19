@@ -1,6 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const Login = () => {
+
+
+const Login = (onSuccess: any, onError: any) => {
+  const [apiResponse, setApiResponse] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const postData = {
+      Email: "Presentatest@yopmail.com",
+      Password: "Presenta@24"
+    };
+
+
+    try {
+      const response = await fetch('https://devapi.thepresenta.com/Account/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/plain',
+        },
+        body: JSON.stringify(postData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+
   return (
     <>
       <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen  ">
@@ -99,6 +135,7 @@ const Login = () => {
                 <button
                   type="submit"
                   className="flex w-full mt-10 justify-center rounded-lg border bg-black px-3 py-4 text-sm font-semibold leading-6 text-white"
+                  onClick={handleSubmit}
                 >
                   Sign in
                 </button>
